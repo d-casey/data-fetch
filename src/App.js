@@ -12,9 +12,9 @@ const App = () => {
   //useEffect is called on initial render, and updates. Like componentDidMount, comonentDidUpdate, componentWillUnmount
   useEffect(() => {
     const fetchPokemon = async () => {//async inside useEffect must be done inside
-      const res = await axios('https://pokeapi.co/api/v2/pokemon?limit=151')
-      const returnedPokemon = res && res.data && res.data.results
-      setPokemon(returnedPokemon)//updates the pokemon state variable
+      const res = await fetch('https://pokeapi.co/api/v2/pokemon?limit=151')
+      const jsonRes = await res.json()
+      setPokemon(jsonRes.results)//updates the pokemon state variable
     }
     fetchPokemon()
   }, [])//the empty array at the end means that this useEffect() hook will only be called when the component mounts
@@ -25,10 +25,11 @@ const App = () => {
     if (!formatted && pokemon) {//this will only run if the data hasn't been formatted, so it will do it once after the first useEffect function is complete, and the component has then updated after the state variable is updated
       const formatResults = (returnedPokemon) => {
         const formattedResults = returnedPokemon.map(async (pokemon) => {//async map to let us call the api each time
-          let fullPokemonData = await axios(pokemon.url)
+          let fullPokemonData = await fetch(pokemon.url)
+          let fullPokemonDataRes = await fullPokemonData.json()
           let formattedPokemon = {
             name: pokemon.name,
-            url: fullPokemonData.data.sprites.front_default
+            url: fullPokemonDataRes.sprites.front_default
           }
           return formattedPokemon
         })
@@ -39,7 +40,7 @@ const App = () => {
         .then(data => setPokemon(data))
         .then(setFormatted(true))
     }
-  }, [pokemon, formatted])//the value here denotes the value this hook will be listening for when the component updates
+  }, [pokemon])//the value here denotes the value this hook will be listening for when the component updates
 
   return (
     <div className="App">
@@ -56,3 +57,7 @@ const App = () => {
 }
 
 export default App
+
+//useful
+//https://www.robinwieruch.de/react-hooks-fetch-data
+//https://stackoverflow.com/questions/42489918/async-await-inside-arraymap
