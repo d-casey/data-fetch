@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`it renders correctly 1`] = `
+<ul
+  className="Pokemon-list"
+>
+  <li>
+    <p>
+      bulbasaur
+    </p>
+    <img
+      alt="bulbasaur"
+      src="bulba.org"
+    />
+  </li>
+  <li>
+    <p>
+      charmander
+    </p>
+    <img
+      alt="charmander"
+      src="charm.org"
+    />
+  </li>
+  <li>
+    <p>
+      squirtle
+    </p>
+    <img
+      alt="squirtle"
+      src="squirt.org"
+    />
+  </li>
+</ul>
+`;

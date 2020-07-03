@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Pokemon renders as expected 1`] = `
+<li>
+  <p>
+    bulba
+  </p>
+  <img
+    alt="bulba"
+    src="bulbapedia.org"
+  />
+</li>
+`;

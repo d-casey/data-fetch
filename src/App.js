@@ -1,26 +1,53 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react'
+import PokemonList from './containers/PokemonList'
+import axios from 'axios'
+import './App.css'
 
-function App() {
+const App = () => {
+  const [pokemon, setPokemon] = useState(null)
+  const [formatted, setFormatted] = useState(false)
+
+  useEffect(() => {
+    const fetchPokemon = async () => {
+      const res = await axios('https://pokeapi.co/api/v2/pokemon?limit=151')
+      const returnedPokemon = res && res.data && res.data.results
+      setPokemon(returnedPokemon)
+    }
+    fetchPokemon()
+  }, [])
+
+  useEffect(() => {
+    if (!formatted && pokemon) {
+      const formatResults = (returnedPokemon) => {
+        const formattedResults = returnedPokemon.map(async (pokemon) => {
+          let fullPokemonData = await axios(pokemon.url)
+          let formattedPokemon = {
+            name: pokemon.name,
+            url: fullPokemonData.data.sprites.front_default
+          }
+          return formattedPokemon
+        })
+        return Promise.all(formattedResults)
+      }
+
+      formatResults(pokemon)
+        .then(data => setPokemon(data))
+        .then(setFormatted(true))
+    }
+  }, [pokemon])
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <h1>Give me Pokemon!</h1>
       </header>
+      <main className="Main">
+        { formatted && pokemon &&
+          <PokemonList pokemon={pokemon} />
+        }
+      </main>
     </div>
   );
 }
 
-export default App;
+export default App
