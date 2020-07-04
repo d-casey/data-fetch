@@ -5,29 +5,18 @@ import './App.css'
 
 const App = () => {
   const [pokemon, setPokemon] = useState(null)
-  const [formatted, setFormatted] = useState(false)
 
   useEffect(() => {
     try {
       fetchPokemon()
-        .then(data => setPokemon(data))
+        .then(data => {
+          formatResults(data)
+            .then(formattedData => setPokemon(formattedData))
+        })
     } catch (err) {
       console.log('error fetching initial pokemon data', err)
     }
-
   }, [])
-
-  useEffect(() => {
-    if (!formatted && pokemon) {
-      try {
-        formatResults(pokemon)
-          .then(data => setPokemon(data))
-          .then(setFormatted(true))
-      } catch(err) {
-        console.log('error formatting received pokemon data', err)
-      }
-    }
-  }, [pokemon])
 
   return (
     <div className="App">
@@ -35,7 +24,7 @@ const App = () => {
         <h1>Give me Pokemon!</h1>
       </header>
       <main className="Main">
-        { formatted && pokemon &&
+        { pokemon &&
           <PokemonList pokemon={pokemon} />
         }
       </main>
